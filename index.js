@@ -1,6 +1,19 @@
 const visit = require('unist-util-visit');
 
-const addVideo = ({ markdownAST }, options) => {
+const defaults = {
+	width: 800,
+	height: null,
+	preload: false,
+	muted: false,
+	autoplay: false,
+	loop: false,
+	controls: true,
+	playsinline: true,
+};
+
+const addVideo = ({ markdownAST }, pluginOptions) => {
+
+	const options = Object.assign({}, defaults, pluginOptions);
 
 	visit(markdownAST, 'inlineCode', (node) => {
 		const { value } = node;
@@ -27,6 +40,9 @@ const renderVideoTag = (url, options) => {
 			muted="${options.muted}"
 			${options.autoplay ? 'autoplay' : ''}
 			${options.loop ? 'loop' : ''}
+			${options.controls ? 'controls' : ''}
+			
+			${options.playsinline ? 'playsinline webkit-playsinline' : ''}
 		></video>
 	`;
 
